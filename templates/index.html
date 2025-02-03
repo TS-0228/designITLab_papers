@@ -1,618 +1,348 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DesignIT 연구실 논문 성과</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-      body {
-          font-family: 'Noto Sans KR', sans-serif;
-          max-width: 1400px;
-          margin: 0 auto;
-          padding: 20px;
-          line-height: 1.6;
-          background-color: #f5f5f5;
-      }
-      h1 {
-          color: #2c3e50;
-          text-align: center;
-          margin-bottom: 40px;
-          font-size: 2.2em;
-          padding-bottom: 20px;
-          border-bottom: 3px solid #eee;
-      }
-      .toolbar {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 30px;
-          padding: 15px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          flex-direction: column;
-      }
-      .search-container {
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-          flex-direction: column;
-          width: 100%;
-      }
-      .top-controls {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          gap: 20px;
-      }
-      .search-box {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          flex: 1;
-      }
-      .search-box input {
-          flex: 1;
-          min-width: 300px;
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-      }
-      .search-box button {
-          padding: 8px 16px;
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-      }
-      .search-box button:hover {
-          background-color: #2980b9;
-      }
-      .filter-box {
-          display: flex;
-          gap: 10px;
-      }
-      .filter-box select {
-          min-width: 150px;
-          padding: 8px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-      }
-      .export-container button {
-          padding: 8px 16px;
-          background-color: #27ae60;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          font-family: inherit;
-      }
-      .export-container button:hover {
-          background-color: #219a52;
-      }
-      .selected-filters {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 15px;
-          width: 100%;
-          min-height: 30px;
-          padding: 5px;
-          background-color: #f8f9fa;
-          border-radius: 4px;
-      }
-      .filter-tag {
-          display: flex;
-          align-items: center;
-          padding: 6px 12px;
-          background-color: #e3f2fd;
-          border-radius: 4px;
-          font-size: 0.9em;
-      }
-      .filter-tag button {
-          margin-left: 8px;
-          background: none;
-          border: none;
-          color: #666;
-          cursor: pointer;
-          padding: 0 4px;
-      }
-      .filter-tag button:hover {
-          color: #333;
-      }
-      .category {
-          margin-bottom: 40px;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-          overflow: hidden;
-      }
-      .category-header {
-          color: #34495e;
-          margin: 0;
-          padding: 20px;
-          font-size: 1.5em;
-          background-color: #f8f9fa;
-          border-bottom: 2px solid #eee;
-      }
-      table {
-          width: 100%;
-          border-collapse: collapse;
-      }
-      th, td {
-          padding: 12px;
-          text-align: left;
-          border-bottom: 1px solid #ddd;
-      }
-      th {
-          background-color: #f8f9fa;
-          font-weight: 500;
-          color: #2c3e50;
-          position: sticky;
-          top: 0;
-          z-index: 10;
-      }
-      tr:hover {
-          background-color: #f5f5f5;
-      }
-      .number { width: 60px; text-align: center; }
-      .year { width: 70px; text-align: center; }
-      .author { width: 180px; }
-      .title { width: 300px; }
-      .journal { width: 150px; }
-      .volume, .pages { width: 100px; text-align: center; }
-      .doi { width: 150px; }
-      .acknowledgement { width: 150px; }
-      .doi a {
-          color: #3498db;
-          text-decoration: none;
-          word-break: break-all;
-      }
-      .doi a:hover {
-          text-decoration: underline;
-      }
-      .citation-copy {
-          padding: 4px 8px;
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 3px;
-          cursor: pointer;
-          font-size: 0.9em;
-      }
-      .citation-copy:hover {
-          background-color: #2980b9;
-      }
-      @media (max-width: 1200px) {
-          .top-controls {
-              flex-direction: column;
-          }
-          .search-box {
-              width: 100%;
-          }
-          .filter-box {
-              width: 100%;
-              flex-wrap: wrap;
-          }
-          .filter-box select {
-              flex: 1;
-          }
-          table {
-              display: block;
-              overflow-x: auto;
-          }
-      }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesignIT 연구실 논문 성과</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* 이전 스타일 유지 */
+        .acknowledgement {
+            display: none;  /* 기본적으로 사사표기 숨김 */
+        }
+        .show-acknowledgement .acknowledgement {
+            display: table-cell;  /* 토글 시 보이도록 설정 */
+        }
+        .toggle-button {
+            padding: 8px 16px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .toggle-button:hover {
+            background-color: #2c3e50;
+        }
+        .toggle-button.active {
+            background-color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-  <h1>DesignIT 연구실 논문 성과</h1>
+    <h1>DesignIT 연구실 논문 성과</h1>
 
-  <div class="toolbar">
-      <div class="search-container">
-          <div class="top-controls">
-              <div class="search-box">
-                  <input type="text" id="searchText" placeholder="검색어를 입력하세요">
-                  <button onclick="applyTextSearch()">검색</button>
-              </div>
-              <div class="filter-box">
-                  <select id="categoryFilter" onchange="addCategoryFilter()">
-                      <option value="">카테고리 선택</option>
-                      <option value="도서">도서</option>
-                      <option value="수상">수상</option>
-                      <option value="특허">특허</option>
-                      <option value="SW등록">SW등록</option>
-                      <option value="국제논문">국제논문</option>
-                      <option value="국내논문">국내논문</option>
-                      <option value="국제컨퍼런스">국제컨퍼런스</option>
-                      <option value="국내컨퍼런스">국내컨퍼런스</option>
-                  </select>
-                  <select id="yearFilter" onchange="addYearFilter()">
-                      <option value="">연도 선택</option>
-                  </select>
-                  <select id="fundingFilter" onchange="addFundingFilter()">
-                      <option value="">사사표기 선택</option>
-                  </select>
-                  <div class="export-container">
-                      <button onclick="exportToWord()">Word로 내보내기</button>
-                  </div>
-              </div>
-          </div>
-          <div id="selectedFilters" class="selected-filters"></div>
-      </div>
-  </div>
+    <div class="toolbar">
+        <div class="filter-container">
+            <div class="filter-controls">
+                <div class="filter-box">
+                    <button id="toggleAcknowledgement" class="toggle-button" onclick="toggleAcknowledgement()">
+                        사사표기 보기
+                    </button>
+                    <select id="categoryFilter" onchange="addCategoryFilter()">
+                        <option value="">카테고리 선택</option>
+                        <option value="도서">도서</option>
+                        <option value="수상">수상</option>
+                        <option value="특허">특허</option>
+                        <option value="SW등록">SW등록</option>
+                        <option value="국제논문">국제논문</option>
+                        <option value="국내논문">국내논문</option>
+                        <option value="국제컨퍼런스">국제컨퍼런스</option>
+                        <option value="국내컨퍼런스">국내컨퍼런스</option>
+                    </select>
+                    <select id="yearFilter" onchange="addYearFilter()">
+                        <option value="">연도 선택</option>
+                    </select>
+                    <div class="export-container">
+                        <button onclick="exportToWord()">Word로 내보내기</button>
+                    </div>
+                </div>
+            </div>
+            <div id="selectedFilters" class="selected-filters"></div>
+        </div>
+    </div>
 
-  {% if categories %}
-      {% for category, entries in categories.items() %}
-          <div class="category">
-              <h3 class="category-header">{{ category }}</h3>
-              <table>
-                  <thead>
-                      <tr>
-                          <th class="number">번호</th>
-                          <th class="year">연도</th>
-                          <th class="author">저자명</th>
-                          <th class="title">제목</th>
-                          {% if category == '수상' %}
-                              <th class="journal">주관기관</th>
-                              <th class="volume">내용</th>
-                          {% elif category == '특허' %}
-                              <th class="journal">출원번호</th>
-                              <th class="acknowledgement">사사표기</th>
-                          {% elif category == 'SW등록' %}
-                              <th class="journal">등록번호</th>
-                              <th class="acknowledgement">사사표기</th>
-                          {% else %}
-                              <th class="journal">저널명</th>
-                              <th class="volume">권(호)</th>
-                              <th class="pages">페이지</th>
-                              <th class="doi">DOI</th>
-                              <th class="acknowledgement">사사표기</th>
-                          {% endif %}
-                          <th>인용</th>
-                      </tr>
-                  </thead>
-<tbody>
-   {% for entry in entries %}
-       <tr class="data-row">
-           <td class="number">{{ entry.number }}</td>
-           <td class="year">{{ entry.year }}</td>
-           <td class="author">{{ entry.author }}</td>
-           <td class="title">{{ entry.title }}</td>
-           {% if category == '수상' %}
-               <td class="journal">{{ entry.journal }}</td>
-               <td class="volume">{{ entry.volume }}</td>
-           {% elif category in ['특허', 'SW등록'] %}
-               <td class="journal">{{ entry.volume }}</td>
-               <td class="acknowledgement">{{ entry.acknowledgement }}</td>
-           {% else %}
-               <td class="journal">{{ entry.journal }}</td>
-               <td class="volume">{{ entry.volume }}</td>
-               <td class="pages">{{ entry.pages }}</td>
-               <td class="doi">
-                   {% if entry.doi %}
-                       <a href="https://doi.org/{{ entry.doi }}" target="_blank">{{ entry.doi }}</a>
-                   {% endif %}
-               </td>
-               <td class="acknowledgement">{{ entry.acknowledgement }}</td>
-           {% endif %}
-           <td>
-               <button class="citation-copy" onclick="copyAPA(this.parentElement.parentElement)">복사</button>
-           </td>
-       </tr>
-   {% endfor %}
-</tbody>
-</table>
-          </div>
-      {% endfor %}
-  {% else %}
-      <p>데이터를 불러올 수 없습니다.</p>
-  {% endif %}
+    {% if categories %}
+        {% for category, entries in categories.items() %}
+            <div class="category">
+                <h3 class="category-header">{{ category }}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="number">번호</th>
+                            <th class="year">연도</th>
+                            <th class="author">저자명</th>
+                            <th class="title">제목</th>
+                            {% if category == '수상' %}
+                                <th class="journal">주관기관</th>
+                                <th class="volume">내용</th>
+                            {% elif category == '특허' %}
+                                <th class="journal">출원번호</th>
+                                <th class="acknowledgement">사사표기</th>
+                            {% elif category == 'SW등록' %}
+                                <th class="journal">등록번호</th>
+                                <th class="acknowledgement">사사표기</th>
+                            {% else %}
+                                <th class="journal">저널명</th>
+                                <th class="volume">권(호)</th>
+                                <th class="pages">페이지</th>
+                                <th class="doi">DOI</th>
+                                <th class="acknowledgement">사사표기</th>
+                            {% endif %}
+                            <th>인용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in entries %}
+                            <tr class="data-row">
+                                <td class="number">{{ entry.number }}</td>
+                                <td class="year">{{ entry.year }}</td>
+                                <td class="author">{{ entry.author }}</td>
+                                <td class="title">{{ entry.title }}</td>
+                                {% if category == '수상' %}
+                                    <td class="journal">{{ entry.journal }}</td>
+                                    <td class="volume">{{ entry.volume }}</td>
+                                {% elif category in ['특허', 'SW등록'] %}
+                                    <td class="journal">{{ entry.volume }}</td>
+                                    <td class="acknowledgement">{{ entry.acknowledgement }}</td>
+                                {% else %}
+                                    <td class="journal">{{ entry.journal }}</td>
+                                    <td class="volume">{{ entry.volume }}</td>
+                                    <td class="pages">{{ entry.pages }}</td>
+                                    <td class="doi">
+                                        {% if entry.doi %}
+                                            <a href="https://doi.org/{{ entry.doi }}" target="_blank">{{ entry.doi }}</a>
+                                        {% endif %}
+                                    </td>
+                                    <td class="acknowledgement">{{ entry.acknowledgement }}</td>
+                                {% endif %}
+                                <td>
+                                    <button class="citation-copy" onclick="copyAPA(this.parentElement.parentElement)">복사</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>데이터를 불러올 수 없습니다.</p>
+    {% endif %}
 
-  <script>
-      let selectedFilters = {
-          category: new Set(),
-          year: new Set(),
-          funding: new Set(),
-          text: ''
-      };
+    <script>
+        let selectedFilters = {
+            category: new Set(),
+            year: new Set()
+        };
 
-      function initializeYearFilter() {
-          const years = new Set();
-          document.querySelectorAll('.year').forEach(el => {
-              const year = el.textContent.trim();
-              if (year) years.add(year);
-          });
-          
-          const yearFilter = document.getElementById('yearFilter');
-          const sortedYears = Array.from(years).sort((a, b) => b - a);
-          
-          yearFilter.innerHTML = '<option value="">연도 선택</option>' + 
-              sortedYears.map(year => `<option value="${year}">${year}</option>`).join('');
-      }
+        function toggleAcknowledgement() {
+            const button = document.getElementById('toggleAcknowledgement');
+            document.body.classList.toggle('show-acknowledgement');
+            button.classList.toggle('active');
+            button.textContent = document.body.classList.contains('show-acknowledgement') ? 
+                '사사표기 숨기기' : '사사표기 보기';
+        }
 
-      function initializeFundingFilter() {
-          const fundings = new Set();
-          document.querySelectorAll('.acknowledgement').forEach(el => {
-              const fundingText = el.textContent.trim();
-              if (fundingText) {
-                  fundingText.split(/[,.;]/).forEach(funding => {
-                      const cleanFunding = funding.trim();
-                      if (cleanFunding) {
-                          fundings.add(cleanFunding);
-                      }
-                  });
-              }
-          });
-          
-          const fundingFilter = document.getElementById('fundingFilter');
-          const sortedFundings = Array.from(fundings).sort();
-          
-          fundingFilter.innerHTML = '<option value="">사사표기 선택</option>' + 
-              sortedFundings.map(funding => `<option value="${funding}">${funding}</option>`).join('');
-      }
-function addCategoryFilter() {
-          const select = document.getElementById('categoryFilter');
-          const value = select.value;
-          if (value) {
-              selectedFilters.category.add(value);
-              updateFilterTags();
-              applyFilters();
-              select.selectedIndex = 0;
-          }
-      }
+        function initializeYearFilter() {
+            const years = new Set();
+            document.querySelectorAll('.year').forEach(el => {
+                const year = el.textContent.trim();
+                if (year) years.add(year);
+            });
+            
+            const yearFilter = document.getElementById('yearFilter');
+            const sortedYears = Array.from(years).sort((a, b) => b - a);
+            
+            yearFilter.innerHTML = '<option value="">연도 선택</option>' + 
+                sortedYears.map(year => `<option value="${year}">${year}</option>`).join('');
+        }
 
-      function addYearFilter() {
-          const select = document.getElementById('yearFilter');
-          const value = select.value;
-          if (value) {
-              selectedFilters.year.add(value);
-              updateFilterTags();
-              applyFilters();
-              select.selectedIndex = 0;
-          }
-      }
+        function addCategoryFilter() {
+            const select = document.getElementById('categoryFilter');
+            const value = select.value;
+            if (value) {
+                selectedFilters.category.add(value);
+                updateFilterTags();
+                applyFilters();
+                select.selectedIndex = 0;
+            }
+        }
 
-      function addFundingFilter() {
-          const select = document.getElementById('fundingFilter');
-          const value = select.value;
-          if (value) {
-              selectedFilters.funding.add(value);
-              updateFilterTags();
-              applyFilters();
-              select.selectedIndex = 0;
-          }
-      }
+        function addYearFilter() {
+            const select = document.getElementById('yearFilter');
+            const value = select.value;
+            if (value) {
+                selectedFilters.year.add(value);
+                updateFilterTags();
+                applyFilters();
+                select.selectedIndex = 0;
+            }
+        }
 
-      function removeFilter(type, value) {
-          if (type === 'text') {
-              selectedFilters.text = '';
-              document.getElementById('searchText').value = '';
-          } else {
-              selectedFilters[type].delete(value);
-          }
-          updateFilterTags();
-          applyFilters();
-      }
+        function removeFilter(type, value) {
+            selectedFilters[type].delete(value);
+            updateFilterTags();
+            applyFilters();
+        }
 
-      function updateFilterTags() {
-          const container = document.getElementById('selectedFilters');
-          container.innerHTML = '';
+        function updateFilterTags() {
+            const container = document.getElementById('selectedFilters');
+            container.innerHTML = '';
+            
+            selectedFilters.category.forEach(value => {
+                addFilterTag(container, 'category', `카테고리: ${value}`);
+            });
+            
+            selectedFilters.year.forEach(value => {
+                addFilterTag(container, 'year', `연도: ${value}`);
+            });
+        }
 
-          if (selectedFilters.text) {
-              addFilterTag(container, 'text', `검색어: ${selectedFilters.text}`);
-          }
-          
-          selectedFilters.category.forEach(value => {
-              addFilterTag(container, 'category', `카테고리: ${value}`);
-          });
-          
-          selectedFilters.year.forEach(value => {
-              addFilterTag(container, 'year', `연도: ${value}`);
-          });
+        function addFilterTag(container, type, value) {
+            const tag = document.createElement('div');
+            tag.className = 'filter-tag';
+            const filterValue = value.split(': ')[1];
+            tag.innerHTML = `
+                ${value}
+                <button onclick="removeFilter('${type}', '${filterValue}')">&times;</button>
+            `;
+            container.appendChild(tag);
+        }
 
-          selectedFilters.funding.forEach(value => {
-              addFilterTag(container, 'funding', `사사표기: ${value}`);
-          });
-      }
-function addFilterTag(container, type, value) {
-          const tag = document.createElement('div');
-          tag.className = 'filter-tag';
-          const filterValue = type === 'text' ? selectedFilters.text : value.split(': ')[1];
-          tag.innerHTML = `
-              ${value}
-              <button onclick="removeFilter('${type}', '${filterValue}')">&times;</button>
-          `;
-          container.appendChild(tag);
-      }
+        function applyFilters() {
+            const rows = document.getElementsByClassName('data-row');
+            
+            Array.from(rows).forEach(row => {
+                let visible = true;
 
-      function applyTextSearch() {
-          selectedFilters.text = document.getElementById('searchText').value;
-          updateFilterTags();
-          applyFilters();
-      }
+                if (visible && selectedFilters.category.size > 0) {
+                    const category = row.closest('.category').querySelector('.category-header').textContent;
+                    visible = selectedFilters.category.has(category);
+                }
 
-      function applyFilters() {
-          const rows = document.getElementsByClassName('data-row');
-          
-          Array.from(rows).forEach(row => {
-              let visible = true;
+                if (visible && selectedFilters.year.size > 0) {
+                    const year = row.querySelector('.year').textContent;
+                    visible = selectedFilters.year.has(year);
+                }
 
-              if (selectedFilters.text) {
-                  const searchableText = `${row.querySelector('.author').textContent} ${row.querySelector('.title').textContent} ${row.querySelector('.journal').textContent}`.toLowerCase();
-                  visible = searchableText.includes(selectedFilters.text.toLowerCase());
-              }
+                row.style.display = visible ? '' : 'none';
+            });
 
-              if (visible && selectedFilters.category.size > 0) {
-                  const category = row.closest('.category').querySelector('.category-header').textContent;
-                  visible = selectedFilters.category.has(category);
-              }
+            updateCategoryVisibility();
+        }
 
-              if (visible && selectedFilters.funding.size > 0) {
-                  const acknowledgement = row.querySelector('.acknowledgement')?.textContent || '';
-                  visible = Array.from(selectedFilters.funding).some(funding => {
-                      const fundingParts = acknowledgement.split(/[,.;]/).map(part => part.trim());
-                      return fundingParts.includes(funding);
-                  });
-              }
+        function updateCategoryVisibility() {
+            document.querySelectorAll('.category').forEach(category => {
+                const hasVisibleRows = Array.from(category.querySelectorAll('.data-row'))
+                    .some(row => row.style.display !== 'none');
+                category.style.display = hasVisibleRows ? '' : 'none';
+            });
+        }
 
-              if (visible && selectedFilters.year.size > 0) {
-                  const year = row.querySelector('.year').textContent;
-                  visible = selectedFilters.year.has(year);
-              }
+        function exportToWord() {
+            const exportData = {};
+            const visibleCategories = Array.from(document.querySelectorAll('.category'))
+                .filter(category => window.getComputedStyle(category).display !== 'none');
+            
+            visibleCategories.forEach(category => {
+                const categoryName = category.querySelector('.category-header').textContent;
+                const visibleRows = Array.from(category.querySelectorAll('.data-row'))
+                    .filter(row => window.getComputedStyle(row).display !== 'none');
+                
+                if (visibleRows.length > 0) {
+                    exportData[categoryName] = visibleRows.map(row => ({
+                        year: row.querySelector('.year').textContent.trim(),
+                        author: row.querySelector('.author').textContent.trim(),
+                        title: row.querySelector('.title').textContent.trim(),
+                        journal: row.querySelector('.journal').textContent.trim(),
+                        volume: row.querySelector('.volume')?.textContent.trim() || '',
+                        pages: row.querySelector('.pages')?.textContent.trim() || '',
+                        doi: row.querySelector('.doi a')?.textContent.trim() || '',
+                    }));
+                }
+            });
+            
+            fetch('/export/word', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(exportData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'DesignITLab_CV.docx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+        }
 
-              row.style.display = visible ? '' : 'none';
-          });
+        function copyAPA(row) {
+            const authors = row.querySelector('.author').textContent.trim();
+            const year = row.querySelector('.year').textContent.trim();
+            const title = row.querySelector('.title').textContent.trim();
+            const journal = row.querySelector('.journal').textContent.trim();
+            const category = row.closest('.category').querySelector('.category-header').textContent;
+            
+            let citation = `${authors} (${year}). ${title}`;
+            
+            if (category === '수상') {
+                const content = row.querySelector('.volume').textContent.trim();
+                citation += `. ${journal}`;
+                if (content) citation += `, ${content}`;
+            } else if (category === '특허') {
+                citation += `. 출원번호: ${journal}, ${year}`;
+            } else if (category === 'SW등록') {
+                citation += `. 등록번호: ${journal}, ${year}`;
+            } else {
+                const volume = row.querySelector('.volume')?.textContent.trim();
+                const pages = row.querySelector('.pages')?.textContent.trim();
+                const doi = row.querySelector('.doi')?.textContent.trim();
+                
+                const cleanJournal = journal.replace(/<\/?i>/g, '');
+                citation += `. ${cleanJournal}`;
+                
+                if (volume || pages) {
+                    const parts = [];
+                    if (volume) {
+                        const volParts = volume.split('(');
+                        const cleanVolume = volume.replace(/<\/?i>/g, '');
+                        if (volParts.length > 1) {
+                            parts.push(`${cleanVolume}`);
+                        } else {
+                            parts.push(cleanVolume);
+                        }
+                    }
+                    if (pages) parts.push(pages);
+                    if (parts.length > 0) {
+                        citation += `, ${parts.join(', ')}`;
+                    }
+                }
+                
+                if (doi) {
+                    const cleanDoi = doi.replace(/^https:\/\/doi\.org\//g, '').trim();
+                    if (cleanDoi) citation += `. https://doi.org/${cleanDoi}`;
+                }
+            }
+            
+            citation = citation.replace(/\s+/g, ' ').trim();
+            if (!citation.endsWith('.')) citation += '.';
+            
+            navigator.clipboard.writeText(citation).then(() => {
+                const button = row.querySelector('.citation-copy');
+                button.textContent = '복사됨';
+                setTimeout(() => button.textContent = '복사', 2000);
+            });
+        }
 
-          updateCategoryVisibility();
-      }
-
-      function updateCategoryVisibility() {
-          document.querySelectorAll('.category').forEach(category => {
-              const hasVisibleRows = Array.from(category.querySelectorAll('.data-row'))
-                  .some(row => row.style.display !== 'none');
-              category.style.display = hasVisibleRows ? '' : 'none';
-          });
-      }
-
-      function exportToWord() {
-          const exportData = {};
-          const visibleCategories = Array.from(document.querySelectorAll('.category'))
-              .filter(category => window.getComputedStyle(category).display !== 'none');
-          
-          visibleCategories.forEach(category => {
-              const categoryName = category.querySelector('.category-header').textContent;
-              const visibleRows = Array.from(category.querySelectorAll('.data-row'))
-                  .filter(row => window.getComputedStyle(row).display !== 'none');
-              
-              if (visibleRows.length > 0) {
-                  exportData[categoryName] = visibleRows.map(row => ({
-                      year: row.querySelector('.year').textContent.trim(),
-                      author: row.querySelector('.author').textContent.trim(),
-                      title: row.querySelector('.title').textContent.trim(),
-                      journal: row.querySelector('.journal').textContent.trim(),
-                      volume: row.querySelector('.volume')?.textContent.trim() || '',
-                      pages: row.querySelector('.pages')?.textContent.trim() || '',
-                      doi: row.querySelector('.doi a')?.textContent.trim() || '',
-                      acknowledgement: row.querySelector('.acknowledgement')?.textContent.trim() || ''
-                  }));
-              }
-          });
-          
-          fetch('/export/word', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(exportData)
-          })
-          .then(response => response.blob())
-          .then(blob => {
-              const url = window.URL.createObjectURL(blob);
-              const a = document.createElement('a');
-              a.href = url;
-              a.download = 'DesignITLab_CV.docx';
-              document.body.appendChild(a);
-              a.click();
-              window.URL.revokeObjectURL(url);
-          });
-      }
-
-      function copyAPA(row) {
-          const authors = row.querySelector('.author').textContent.trim();
-          const year = row.querySelector('.year').textContent.trim();
-          const title = row.querySelector('.title').textContent.trim();
-          const journal = row.querySelector('.journal').textContent.trim();
-          const category = row.closest('.category').querySelector('.category-header').textContent;
-          
-          let citation = `${authors} (${year}). ${title}`;
-          
-          if (category === '수상') {
-              const content = row.querySelector('.volume').textContent.trim();
-              citation += `. ${journal}`;
-              if (content) citation += `, ${content}`;
-          } else if (category === '특허') {
-              citation += `. 출원번호: ${journal}, ${year}`;
-          } else if (category === 'SW등록') {
-              citation += `. 등록번호: ${journal}, ${year}`;
-          } else {
-              const volume = row.querySelector('.volume')?.textContent.trim();
-              const pages = row.querySelector('.pages')?.textContent.trim();
-              const doi = row.querySelector('.doi')?.textContent.trim();
-              
-              const cleanJournal = journal.replace(/<\/?i>/g, '');
-              citation += `. ${cleanJournal}`;
-              
-              if (volume || pages) {
-                  const parts = [];
-                  if (volume) {
-                      const volParts = volume.split('(');
-                      const cleanVolume = volume.replace(/<\/?i>/g, '');
-                      if (volParts.length > 1) {
-                          parts.push(`${cleanVolume}`);
-                      } else {
-                          parts.push(cleanVolume);
-                      }
-                  }
-                  if (pages) parts.push(pages);
-                  if (parts.length > 0) {
-                      citation += `, ${parts.join(', ')}`;
-                  }
-              }
-              
-              if (doi) {
-                  const cleanDoi = doi.replace(/^https:\/\/doi\.org\//g, '').trim();
-                  if (cleanDoi) citation += `. https://doi.org/${cleanDoi}`;
-              }
-          }
-          
-          citation = citation.replace(/\s+/g, ' ').trim();
-          if (!citation.endsWith('.')) citation += '.';
-          
-          navigator.clipboard.writeText(citation).then(() => {
-              const button = row.querySelector('.citation-copy');
-              button.textContent = '복사됨';
-              setTimeout(() => button.textContent = '복사', 2000);
-          });
-      }
-
-      document.getElementById('searchText').addEventListener('input', function(e) {
-          selectedFilters.text = e.target.value;
-          if (e.target.value === '') {
-              updateFilterTags();
-              applyFilters();
-          }
-      });
-
-      document.getElementById('searchText').addEventListener('keypress', function(e) {
-          if (e.key === 'Enter') {
-              selectedFilters.text = e.target.value;
-              updateFilterTags();
-              applyFilters();
-          }
-      });
-
-      window.addEventListener('load', function() {
-          initializeYearFilter();
-          initializeFundingFilter();
-          
-          const urlParams = new URLSearchParams(window.location.search);
-          const searchText = urlParams.get('search');
-          const searchType = urlParams.get('searchType');
-          
-          if (searchText && searchType === 'text') {
-              document.getElementById('searchText').value = decodeURIComponent(searchText);
-              selectedFilters.text = decodeURIComponent(searchText);
-          } else if (searchText && searchType === 'category') {
-              selectedFilters.category.add(decodeURIComponent(searchText));
-          }
-          
-          if (selectedFilters.text || selectedFilters.category.size > 0) {
-              updateFilterTags();
-              applyFilters();
-          }
-      });
-  </script>
+        window.addEventListener('load', function() {
+            initializeYearFilter();
+        });
+    </script>
 </body>
 </html>
