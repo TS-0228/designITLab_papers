@@ -242,6 +242,18 @@ def index():
         traceback.print_exc()
         return render_template('index.html', categories={})
 
+@app.errorhandler(404)
+def not_found_error(error):
+    return "페이지를 찾을 수 없습니다.", 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return "서버 내부 오류가 발생했습니다.", 500
+
+@app.route('/favicon.ico')
+def favicon():
+    return '', 204
+
 port = int(os.environ.get('PORT', 5000))
 
 if __name__ == '__main__':
