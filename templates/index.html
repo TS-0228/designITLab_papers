@@ -28,6 +28,20 @@
         .toggle-button.active {
             background-color: #2980b9;
         }
+        
+        /* 새로 추가된 스타일 */
+        .data-row td::after {
+            content: ", ";
+        }
+        .data-row td:last-child::after {
+            content: none;
+        }
+        .category:not(:last-child) .data-row:last-child td:last-child::after {
+            content: ",";
+        }
+        .number::after {
+            content: ". ";
+        }
     </style>
 </head>
 <body>
