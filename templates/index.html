@@ -6,11 +6,87 @@
     <title>DesignIT 연구실 논문 성과</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category {
+            margin-bottom: 2em;
+        }
+
+        .category-header {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-row {
+            margin-bottom: 1em;
+            line-height: 1.8;
+        }
+
+        .data-row td {
+            padding: 8px 4px;
+            vertical-align: top;
+        }
+
+        .number {
+            min-width: 2em;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .number::after {
+            content: ". ";
+        }
+
+        .year {
+            color: #666;
+        }
+
+        .title {
+            font-weight: 500;
+        }
+
+        .doi a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .doi a:hover {
+            text-decoration: underline;
+        }
+
+        .citation-copy {
+            padding: 4px 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .citation-copy:hover {
+            background-color: #e9ecef;
+        }
+
         .toolbar {
             display: flex;
             justify-content: flex-end;
             padding: 10px 0;
             margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
         }
 
         .filter-container {
@@ -55,13 +131,17 @@
             padding: 0 4px;
         }
 
-        /* 이전 스타일 유지 */
         .acknowledgement {
             display: none;
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
         }
+
         .show-acknowledgement .acknowledgement {
             display: table-cell;
         }
+
         .toggle-button {
             padding: 8px 16px;
             background-color: #34495e;
@@ -70,9 +150,11 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         .toggle-button:hover {
             background-color: #2c3e50;
         }
+
         .toggle-button.active {
             background-color: #2980b9;
         }
@@ -81,6 +163,7 @@
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ddd;
+            background-color: white;
         }
 
         .export-container button {
@@ -96,18 +179,25 @@
             background-color: #2c3e50;
         }
 
-        /* 구두점 관련 스타일 */
-        .data-row td::after {
-            content: ", ";
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5em;
         }
-        .data-row td:last-child::after {
-            content: none;
+
+        /* 항목 사이 간격 조정 */
+        .data-row td {
+            padding-right: 1em;
         }
-        .category:not(:last-child) .data-row:last-child td:last-child::after {
+
+        /* 마지막 항목을 제외한 모든 항목 뒤에 쉼표 추가 */
+        .data-row td:not(:last-child)::after {
             content: ",";
+            margin-right: 0.5em;
         }
-        .number::after {
-            content: ". ";
+
+        /* 복사 버튼이 있는 셀은 쉼표 제외 */
+        .data-row td:has(button)::after {
+            content: none;
         }
     </style>
 </head>
@@ -341,7 +431,8 @@
         function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
-            const title = row.querySelector('.title').textContent.trim();
+
+        const title = row.querySelector('.title').textContent.trim();
             const journal = row.querySelector('.journal').textContent.trim();
             const category = row.closest('.category').querySelector('.category-header').textContent;
             
