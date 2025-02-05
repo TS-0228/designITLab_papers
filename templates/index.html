@@ -195,8 +195,14 @@
             margin-right: 0.5em;
         }
 
-        /* 복사 버튼이 있는 셀은 쉼표 제외 */
+        /* 복사 버튼이 있는 셀과 마지막 항목은 쉼표 제외 */
+        .data-row td:last-child::after,
         .data-row td:has(button)::after {
+            content: none;
+        }
+
+        /* 마지막 항목의 쉼표 제거 */
+        .data-row:last-child td:last-child::after {
             content: none;
         }
     </style>
@@ -431,8 +437,7 @@
         function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
-
-        const title = row.querySelector('.title').textContent.trim();
+            const title = row.querySelector('.title').textContent.trim();
             const journal = row.querySelector('.journal').textContent.trim();
             const category = row.closest('.category').querySelector('.category-header').textContent;
             
