@@ -127,6 +127,7 @@
             line-height: 1.8;
         }
 
+        /* 번호 뒤에는 마침표만 찍도록 설정 */
         td.number {
             position: relative;
             min-width: 2em;
@@ -134,7 +135,6 @@
             font-weight: 500;
             padding-right: 0.5em !important;
         }
-
         td.number::after {
             content: ".";
             position: relative;
@@ -142,27 +142,11 @@
             margin-left: 0;
         }
 
-        .data-row td:not(.number):not(:last-child) {
-            position: relative;
-            padding-right: 1.5em;
-        }
-
-        .data-row td:not(.number):not(:last-child)::after {
-            content: ",";
-            position: absolute;
-            right: 0.5em;
-        }
-
-        .data-row td:has(button)::after,
-        .data-row td:last-child::after {
-            content: none;
-        }
-
+        /* 각 셀에 자동으로 쉼표를 붙이는 부분 제거 */
         .data-row td {
             padding: 8px 4px;
             vertical-align: top;
         }
-
         .data-row td:last-child {
             padding-right: 0.5em;
         }
@@ -294,8 +278,9 @@
             const button = document.getElementById('toggleAcknowledgement');
             document.body.classList.toggle('show-acknowledgement');
             button.classList.toggle('active');
-            button.textContent = document.body.classList.contains('show-acknowledgement') ? 
-                '사사표기 숨기기' : '사사표기 보기';
+            button.textContent = document.body.classList.contains('show-acknowledgement') 
+                ? '사사표기 숨기기' 
+                : '사사표기 보기';
         }
 
         function initializeYearFilter() {
@@ -436,7 +421,7 @@
             });
         }
 
-function copyAPA(row) {
+        function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
             const title = row.querySelector('.title').textContent.trim();
