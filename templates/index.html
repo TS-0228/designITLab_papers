@@ -14,71 +14,9 @@
             margin: 0 auto;
         }
 
-        .category {
-            margin-bottom: 2em;
-        }
-
-        .category-header {
-            font-size: 1.2em;
+        h1 {
             color: #2c3e50;
-            margin-bottom: 1em;
-            padding-bottom: 0.5em;
-            border-bottom: 2px solid #eee;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-row {
-            margin-bottom: 1em;
-            line-height: 1.8;
-        }
-
-        .data-row td {
-            padding: 8px 4px;
-            vertical-align: top;
-        }
-
-        .number {
-            min-width: 2em;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .number::after {
-            content: ". ";
-        }
-
-        .year {
-            color: #666;
-        }
-
-        .title {
-            font-weight: 500;
-        }
-
-        .doi a {
-            color: #2980b9;
-            text-decoration: none;
-        }
-
-        .doi a:hover {
-            text-decoration: underline;
-        }
-
-        .citation-copy {
-            padding: 4px 8px;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .citation-copy:hover {
-            background-color: #e9ecef;
+            margin-bottom: 1.5em;
         }
 
         .toolbar {
@@ -131,17 +69,6 @@
             padding: 0 4px;
         }
 
-        .acknowledgement {
-            display: none;
-            color: #666;
-            font-size: 0.9em;
-            font-style: italic;
-        }
-
-        .show-acknowledgement .acknowledgement {
-            display: table-cell;
-        }
-
         .toggle-button {
             padding: 8px 16px;
             background-color: #34495e;
@@ -158,12 +85,11 @@
         .toggle-button.active {
             background-color: #2980b9;
         }
-        
+
         select {
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #ddd;
-            background-color: white;
         }
 
         .export-container button {
@@ -179,31 +105,98 @@
             background-color: #2c3e50;
         }
 
-        h1 {
+        .category {
+            margin-bottom: 2em;
+        }
+
+        .category-header {
+            font-size: 1.2em;
             color: #2c3e50;
-            margin-bottom: 1.5em;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid #eee;
         }
 
-        /* 항목 사이 간격 조정 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-row {
+            margin-bottom: 1em;
+            line-height: 1.8;
+        }
+
         .data-row td {
-            padding-right: 1em;
+            padding: 8px 4px;
+            vertical-align: top;
+            position: relative;
+            padding-right: 1.5em;
         }
 
-        /* 마지막 항목을 제외한 모든 항목 뒤에 쉼표 추가 */
-        .data-row td:not(:last-child)::after {
-            content: ",";
-            margin-right: 0.5em;
+        td.number {
+            min-width: 2em;
+            color: #666;
+            font-weight: 500;
+            position: relative;
         }
 
-        /* 복사 버튼이 있는 셀과 마지막 항목은 쉼표 제외 */
-        .data-row td:last-child::after,
-        .data-row td:has(button)::after {
+        td.number::after {
+            content: ". ";
+            position: absolute;
+            right: 0.5em;
+        }
+
+        .data-row td:not(.number):not(:last-child)::after {
+            content: ", ";
+            position: absolute;
+            right: 0.5em;
+        }
+
+        .data-row td:has(button)::after,
+        .data-row td:last-child::after {
             content: none;
         }
 
-        /* 마지막 항목의 쉼표 제거 */
-        .data-row:last-child td:last-child::after {
-            content: none;
+        .year {
+            color: #666;
+        }
+
+        .title {
+            font-weight: 500;
+        }
+
+        .doi a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .doi a:hover {
+            text-decoration: underline;
+        }
+
+        .citation-copy {
+            padding: 4px 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .citation-copy:hover {
+            background-color: #e9ecef;
+        }
+
+        .acknowledgement {
+            display: none;
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .show-acknowledgement .acknowledgement {
+            display: table-cell;
         }
     </style>
 </head>
@@ -448,6 +441,8 @@
                 citation += `. ${journal}`;
                 if (content) citation += `, ${content}`;
             } else if (category === '특허') {
+                citation += `.
+
                 citation += `. 출원번호: ${journal}, ${year}`;
             } else if (category === 'SW등록') {
                 citation += `. 등록번호: ${journal}, ${year}`;
