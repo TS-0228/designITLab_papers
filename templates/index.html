@@ -37,33 +37,6 @@
             gap: 10px;
             justify-content: flex-end;
         }
-        .filter-box {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .selected-filters {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-        .filter-tag {
-            background-color: #e1e1e1;
-            padding: 3px 6px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 12px;
-        }
-        .filter-tag button {
-            border: none;
-            background: none;
-            cursor: pointer;
-            padding: 0 4px;
-        }
         .toggle-button, select {
             padding: 6px 12px;
             font-size: 13px;
@@ -78,26 +51,11 @@
         .toggle-button:hover {
             background-color: #2c3e50;
         }
-        .toggle-button.active {
-            background-color: #2980b9;
-        }
-        .export-container button {
-            padding: 6px 12px;
-            background-color: #34495e;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .export-container button:hover {
-            background-color: #2c3e50;
-        }
         .category {
             margin-bottom: 2em;
         }
         .category-header {
-            font-size: 1.1em;
+            font-size: 1.2em;
             color: #2c3e50;
             margin-bottom: 1em;
             padding-bottom: 0.5em;
@@ -106,38 +64,51 @@
         table {
             width: 100%;
             border-collapse: collapse;
-        }
-        .data-row {
-            line-height: 1.6;
+            table-layout: fixed;
         }
         .data-row td {
             font-size: 13px;
+            padding: 8px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         td.number {
-            min-width: 2em;
-            color: #666;
+            width: 4%;
+            text-align: center;
             font-weight: 500;
-            padding-right: 1em;
         }
         td.year {
-            padding-right: 2em;
-            font-size: 13px;
+            width: 6%;
+            text-align: center;
+            font-weight: 500;
         }
         td.author {
+            width: 20%;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .data-row td:last-child {
-            padding-right: 0.5em;
-        }
-        .year {
-            color: #666;
-        }
-        .title {
+        td.title {
+            width: 30%;
             font-weight: 500;
+            word-break: keep-all;
+        }
+        td.journal {
+            width: 20%;
+        }
+        td.volume {
+            width: 8%;
+        }
+        td.pages {
+            width: 8%;
+        }
+        td.doi {
+            width: 12%;
         }
         .doi a {
             color: #2980b9;
             text-decoration: none;
+            overflow-wrap: break-word;
         }
         .doi a:hover {
             text-decoration: underline;
@@ -153,15 +124,6 @@
         .citation-copy:hover {
             background-color: #e9ecef;
         }
-        .acknowledgement {
-            display: none;
-            color: #666;
-            font-size: 12px;
-            font-style: italic;
-        }
-        .show-acknowledgement .acknowledgement {
-            display: table-cell;
-        }
     </style>
 </head>
 <body>
@@ -169,22 +131,16 @@
     <div class="toolbar">
         <div class="filter-container">
             <div class="filter-controls">
-                <div class="filter-box">
-                    <button id="toggleAcknowledgement" class="toggle-button" onclick="toggleAcknowledgement()">
-                        사사표기 보기
-                    </button>
-                    <select id="categoryFilter" onchange="addCategoryFilter()">
-                        <option value="">카테고리 선택</option>
-                    </select>
-                    <select id="yearFilter" onchange="addYearFilter()">
-                        <option value="">연도 선택</option>
-                    </select>
-                    <div class="export-container">
-                        <button onclick="exportToWord()">Word로 내보내기</button>
-                    </div>
-                </div>
+                <button id="toggleAcknowledgement" class="toggle-button" onclick="toggleAcknowledgement()">
+                    사사표기 보기
+                </button>
+                <select id="categoryFilter" onchange="addCategoryFilter()">
+                    <option value="">카테고리 선택</option>
+                </select>
+                <select id="yearFilter" onchange="addYearFilter()">
+                    <option value="">연도 선택</option>
+                </select>
             </div>
-            <div id="selectedFilters" class="selected-filters"></div>
         </div>
     </div>
     {% if categories %}
@@ -199,13 +155,7 @@
                                 <td class="year">{{ entry.year }}</td>
                                 <td class="author">{{ entry.author }}</td>
                                 <td class="title">{{ entry.title }}</td>
-                                {% if category == '수상' %}
-                                    <td class="journal">{{ entry.journal }}</td>
-                                    <td class="volume">{{ entry.volume }}</td>
-                                {% elif category in ['특허', 'SW등록'] %}
-                                    <td class="journal">{{ entry.volume }}</td>
-                                    <td class="acknowledgement">{{ entry.acknowledgement }}</td>
-                                {% else %}
+                                {% if category == '국제논문' or category == '국제컨퍼런스' %}
                                     <td class="journal">{{ entry.journal }}</td>
                                     <td class="volume">{{ entry.volume }}</td>
                                     <td class="pages">{{ entry.pages }}</td>
@@ -214,7 +164,6 @@
                                             <a href="https://doi.org/{{ entry.doi }}" target="_blank">{{ entry.doi }}</a>
                                         {% endif %}
                                     </td>
-                                    <td class="acknowledgement">{{ entry.acknowledgement }}</td>
                                 {% endif %}
                                 <td>
                                     <button class="citation-copy" onclick="copyAPA(this.parentElement.parentElement)">복사</button>
@@ -228,5 +177,27 @@
     {% else %}
         <p>데이터를 불러올 수 없습니다.</p>
     {% endif %}
+    <script>
+        function toggleAcknowledgement() {
+            const button = document.getElementById('toggleAcknowledgement');
+            document.body.classList.toggle('show-acknowledgement');
+            button.classList.toggle('active');
+            button.textContent = document.body.classList.contains('show-acknowledgement')
+                ? '사사표기 숨기기'
+                : '사사표기 보기';
+        }
+        function copyAPA(row) {
+            const authors = row.querySelector('.author').textContent.trim();
+            const year = row.querySelector('.year').textContent.trim();
+            const title = row.querySelector('.title').textContent.trim();
+            const journal = row.querySelector('.journal')?.textContent.trim() || '';
+            const citation = `${authors} (${year}). ${title}. ${journal}`;
+            navigator.clipboard.writeText(citation).then(() => {
+                const button = row.querySelector('.citation-copy');
+                button.textContent = '복사됨';
+                setTimeout(() => { button.textContent = '복사'; }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
