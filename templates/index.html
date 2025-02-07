@@ -6,13 +6,69 @@
     <title>DesignIT 연구실 논문 성과</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 이전 스타일 유지 */
-        .acknowledgement {
-            display: none;  /* 기본적으로 사사표기 숨김 */
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .show-acknowledgement .acknowledgement {
-            display: table-cell;  /* 토글 시 보이도록 설정 */
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 1.5em;
         }
+
+        .toolbar {
+            display: flex;
+            justify-content: flex-end;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .filter-box {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .selected-filters {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .filter-tag {
+            background-color: #e1e1e1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .filter-tag button {
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 0 4px;
+        }
+
         .toggle-button {
             padding: 8px 16px;
             background-color: #34495e;
@@ -20,13 +76,136 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            margin-right: 10px;
         }
+
         .toggle-button:hover {
             background-color: #2c3e50;
         }
+
         .toggle-button.active {
             background-color: #2980b9;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+
+        .export-container button {
+            padding: 8px 16px;
+            background-color: #34495e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .export-container button:hover {
+            background-color: #2c3e50;
+        }
+
+        .category {
+            margin-bottom: 2em;
+        }
+
+        .category-header {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin-bottom: 1em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid #eee;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-row {
+            line-height: 1.8;
+        }
+
+        td.number {
+            position: relative;
+            min-width: 2em;
+            color: #666;
+            font-weight: 500;
+            padding-right: 0.5em !important;
+        }
+
+        td.number::after {
+            content: ".";
+            position: relative;
+            right: auto;
+            margin-left: 0;
+        }
+
+        .data-row td:not(.number):not(:last-child) {
+            position: relative;
+            padding-right: 1.5em;
+        }
+
+        .data-row td:not(.number):not(:last-child)::after {
+            content: ",";
+            position: absolute;
+            right: 0.5em;
+        }
+
+        .data-row td:has(button)::after,
+        .data-row td:last-child::after {
+            content: none;
+        }
+
+        .data-row td {
+            padding: 8px 4px;
+            vertical-align: top;
+        }
+
+        .data-row td:last-child {
+            padding-right: 0.5em;
+        }
+
+        .year {
+            color: #666;
+        }
+
+        .title {
+            font-weight: 500;
+        }
+
+        .doi a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+
+        .doi a:hover {
+            text-decoration: underline;
+        }
+
+        .citation-copy {
+            padding: 4px 8px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .citation-copy:hover {
+            background-color: #e9ecef;
+        }
+
+        .acknowledgement {
+            display: none;
+            color: #666;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .show-acknowledgement .acknowledgement {
+            display: table-cell;
         }
     </style>
 </head>
@@ -68,31 +247,6 @@
             <div class="category">
                 <h3 class="category-header">{{ category }}</h3>
                 <table>
-                    <thead>
-                        <tr>
-                            <th class="number">번호</th>
-                            <th class="year">연도</th>
-                            <th class="author">저자명</th>
-                            <th class="title">제목</th>
-                            {% if category == '수상' %}
-                                <th class="journal">주관기관</th>
-                                <th class="volume">내용</th>
-                            {% elif category == '특허' %}
-                                <th class="journal">출원번호</th>
-                                <th class="acknowledgement">사사표기</th>
-                            {% elif category == 'SW등록' %}
-                                <th class="journal">등록번호</th>
-                                <th class="acknowledgement">사사표기</th>
-                            {% else %}
-                                <th class="journal">저널명</th>
-                                <th class="volume">권(호)</th>
-                                <th class="pages">페이지</th>
-                                <th class="doi">DOI</th>
-                                <th class="acknowledgement">사사표기</th>
-                            {% endif %}
-                            <th>인용</th>
-                        </tr>
-                    </thead>
                     <tbody>
                         {% for entry in entries %}
                             <tr class="data-row">
@@ -282,7 +436,7 @@
             });
         }
 
-        function copyAPA(row) {
+function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
             const title = row.querySelector('.title').textContent.trim();
