@@ -8,6 +8,7 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
+            font-size: 14px;
             line-height: 1.6;
             padding: 20px;
             max-width: 1200px;
@@ -16,6 +17,7 @@
         h1 {
             color: #2c3e50;
             margin-bottom: 1.5em;
+            font-size: 1.5em;
         }
         .toolbar {
             display: flex;
@@ -23,6 +25,7 @@
             padding: 10px 0;
             margin-bottom: 20px;
             border-bottom: 1px solid #eee;
+            font-size: 13px;
         }
         .filter-container {
             display: flex;
@@ -48,11 +51,12 @@
         }
         .filter-tag {
             background-color: #e1e1e1;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border-radius: 4px;
             display: flex;
             align-items: center;
             gap: 5px;
+            font-size: 12px;
         }
         .filter-tag button {
             border: none;
@@ -60,12 +64,15 @@
             cursor: pointer;
             padding: 0 4px;
         }
+        .toggle-button, select {
+            padding: 6px 12px;
+            font-size: 13px;
+            border-radius: 4px;
+        }
         .toggle-button {
-            padding: 8px 16px;
             background-color: #34495e;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
         }
         .toggle-button:hover {
@@ -74,18 +81,13 @@
         .toggle-button.active {
             background-color: #2980b9;
         }
-        select {
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: white;
-        }
         .export-container button {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background-color: #34495e;
             color: white;
             border: none;
             border-radius: 4px;
+            font-size: 13px;
             cursor: pointer;
         }
         .export-container button:hover {
@@ -95,7 +97,7 @@
             margin-bottom: 2em;
         }
         .category-header {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #2c3e50;
             margin-bottom: 1em;
             padding-bottom: 0.5em;
@@ -106,10 +108,12 @@
             border-collapse: collapse;
         }
         .data-row {
-            line-height: 1.8;
+            line-height: 1.6;
+        }
+        .data-row td {
+            font-size: 13px;
         }
         td.number {
-            position: relative;
             min-width: 2em;
             color: #666;
             font-weight: 500;
@@ -117,6 +121,7 @@
         }
         td.year {
             padding-right: 2em;
+            font-size: 13px;
         }
         td.author {
             white-space: nowrap;
@@ -138,12 +143,12 @@
             text-decoration: underline;
         }
         .citation-copy {
-            padding: 4px 8px;
+            padding: 3px 6px;
             background-color: #f8f9fa;
             border: 1px solid #dee2e6;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 12px;
         }
         .citation-copy:hover {
             background-color: #e9ecef;
@@ -151,7 +156,7 @@
         .acknowledgement {
             display: none;
             color: #666;
-            font-size: 0.9em;
+            font-size: 12px;
             font-style: italic;
         }
         .show-acknowledgement .acknowledgement {
@@ -170,14 +175,6 @@
                     </button>
                     <select id="categoryFilter" onchange="addCategoryFilter()">
                         <option value="">카테고리 선택</option>
-                        <option value="도서">도서</option>
-                        <option value="수상">수상</option>
-                        <option value="특허">특허</option>
-                        <option value="SW등록">SW등록</option>
-                        <option value="국제논문">국제논문</option>
-                        <option value="국내논문">국내논문</option>
-                        <option value="국제컨퍼런스">국제컨퍼런스</option>
-                        <option value="국내컨퍼런스">국내컨퍼런스</option>
                     </select>
                     <select id="yearFilter" onchange="addYearFilter()">
                         <option value="">연도 선택</option>
@@ -231,189 +228,5 @@
     {% else %}
         <p>데이터를 불러올 수 없습니다.</p>
     {% endif %}
-    <script>
-        let selectedFilters = {
-            category: new Set(),
-            year: new Set()
-        };
-        function toggleAcknowledgement() {
-            const button = document.getElementById('toggleAcknowledgement');
-            document.body.classList.toggle('show-acknowledgement');
-            button.classList.toggle('active');
-            button.textContent = document.body.classList.contains('show-acknowledgement')
-                ? '사사표기 숨기기'
-                : '사사표기 보기';
-        }
-        window.addEventListener('load', function() {
-            initializeYearFilter();
-        });
-        function initializeYearFilter() {
-            const years = new Set();
-            document.querySelectorAll('.year').forEach(el => {
-                const year = el.textContent.trim();
-                if (year) years.add(year);
-            });
-            const yearFilter = document.getElementById('yearFilter');
-            const sortedYears = Array.from(years).sort((a, b) => b - a);
-            yearFilter.innerHTML = '<option value="">연도 선택</option>' + sortedYears.map(year => `<option value="${year}">${year}</option>`).join('');
-        }
-        function addCategoryFilter() {
-            const select = document.getElementById('categoryFilter');
-            const value = select.value;
-            if (value) {
-                selectedFilters.category.add(value);
-                updateFilterTags();
-                applyFilters();
-                select.selectedIndex = 0;
-            }
-        }
-        function addYearFilter() {
-            const select = document.getElementById('yearFilter');
-            const value = select.value;
-            if (value) {
-                selectedFilters.year.add(value);
-                updateFilterTags();
-                applyFilters();
-                select.selectedIndex = 0;
-            }
-        }
-        function removeFilter(type, value) {
-            selectedFilters[type].delete(value);
-            updateFilterTags();
-            applyFilters();
-        }
-        function updateFilterTags() {
-            const container = document.getElementById('selectedFilters');
-            container.innerHTML = '';
-            selectedFilters.category.forEach(value => {
-                addFilterTag(container, 'category', '카테고리: ' + value);
-            });
-            selectedFilters.year.forEach(value => {
-                addFilterTag(container, 'year', '연도: ' + value);
-            });
-        }
-        function addFilterTag(container, type, value) {
-            const tag = document.createElement('div');
-            tag.className = 'filter-tag';
-            const filterValue = value.split(': ')[1];
-            tag.innerHTML = value + '<button onclick="removeFilter(\'' + type + '\', \'' + filterValue + '\')">&times;</button>';
-            container.appendChild(tag);
-        }
-        function applyFilters() {
-            const rows = document.getElementsByClassName('data-row');
-            Array.from(rows).forEach(row => {
-                let visible = true;
-                if (selectedFilters.category.size > 0) {
-                    const cat = row.closest('.category').querySelector('.category-header').textContent;
-                    if (!selectedFilters.category.has(cat)) {
-                        visible = false;
-                    }
-                }
-                if (visible && selectedFilters.year.size > 0) {
-                    const year = row.querySelector('.year').textContent;
-                    if (!selectedFilters.year.has(year)) {
-                        visible = false;
-                    }
-                }
-                row.style.display = visible ? '' : 'none';
-            });
-            updateCategoryVisibility();
-        }
-        function updateCategoryVisibility() {
-            document.querySelectorAll('.category').forEach(category => {
-                const hasVisibleRows = Array.from(category.querySelectorAll('.data-row')).some(row => row.style.display !== 'none');
-                category.style.display = hasVisibleRows ? '' : 'none';
-            });
-        }
-        function exportToWord() {
-            const exportData = {};
-            const visibleCategories = Array.from(document.querySelectorAll('.category')).filter(cat => window.getComputedStyle(cat).display !== 'none');
-            visibleCategories.forEach(category => {
-                const categoryName = category.querySelector('.category-header').textContent;
-                const rows = Array.from(category.querySelectorAll('.data-row')).filter(r => window.getComputedStyle(r).display !== 'none');
-                if (rows.length > 0) {
-                    exportData[categoryName] = rows.map(row => ({
-                        year: row.querySelector('.year').textContent.trim(),
-                        author: row.querySelector('.author').textContent.trim(),
-                        title: row.querySelector('.title').textContent.trim(),
-                        journal: row.querySelector('.journal').textContent.trim(),
-                        volume: row.querySelector('.volume') ? row.querySelector('.volume').textContent.trim() : '',
-                        pages: row.querySelector('.pages') ? row.querySelector('.pages').textContent.trim() : '',
-                        doi: row.querySelector('.doi a') ? row.querySelector('.doi a').textContent.trim() : ''
-                    }));
-                }
-            });
-            fetch('/export/word', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(exportData)
-            })
-            .then(response => response.blob())
-            .then(blob => {
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'DesignITLab_CV.docx';
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-            });
-        }
-        function copyAPA(row) {
-            const authors = row.querySelector('.author').textContent.trim();
-            const year = row.querySelector('.year').textContent.trim();
-            const title = row.querySelector('.title').textContent.trim();
-            const journal = row.querySelector('.journal').textContent.trim();
-            const category = row.closest('.category').querySelector('.category-header').textContent;
-            let citation = authors + ' (' + year + '). ' + title;
-            if (category === '수상') {
-                const content = row.querySelector('.volume').textContent.trim();
-                citation += '. ' + journal;
-                if (content) {
-                    citation += ', ' + content;
-                }
-            } else if (category === '특허') {
-                citation += '. 출원번호: ' + journal + ', ' + year;
-            } else if (category === 'SW등록') {
-                citation += '. 등록번호: ' + journal + ', ' + year;
-            } else {
-                const volume = row.querySelector('.volume') ? row.querySelector('.volume').textContent.trim() : '';
-                const pages = row.querySelector('.pages') ? row.querySelector('.pages').textContent.trim() : '';
-                const doi = row.querySelector('.doi') ? row.querySelector('.doi').textContent.trim() : '';
-                const cleanJournal = journal.replace(/<\/?i>/g, '');
-                citation += '. ' + cleanJournal;
-                if (volume || pages) {
-                    const parts = [];
-                    if (volume) {
-                        const cleanVolume = volume.replace(/<\/?i>/g, '');
-                        parts.push(cleanVolume);
-                    }
-                    if (pages) {
-                        parts.push(pages);
-                    }
-                    if (parts.length > 0) {
-                        citation += ', ' + parts.join(', ');
-                    }
-                }
-                if (doi) {
-                    const cleanDoi = doi.replace(/^https:\/\/doi\.org\//, '').trim();
-                    if (cleanDoi) {
-                        citation += '. https://doi.org/' + cleanDoi;
-                    }
-                }
-            }
-            citation = citation.replace(/\s+/g, ' ').trim();
-            if (!citation.endsWith('.')) {
-                citation += '.';
-            }
-            navigator.clipboard.writeText(citation).then(() => {
-                const button = row.querySelector('.citation-copy');
-                button.textContent = '복사됨';
-                setTimeout(() => {
-                    button.textContent = '복사';
-                }, 2000);
-            });
-        }
-    </script>
 </body>
 </html>
