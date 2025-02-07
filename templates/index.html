@@ -1,201 +1,193 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>DesignIT 연구실 논문 성과</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 1.5em;
-            font-size: 1.5em;
-        }
-        .toolbar {
-            display: flex;
-            justify-content: flex-end;
-            padding: 10px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            font-size: 13px;
-        }
-        .filter-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        .filter-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-        .toggle-button, select {
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-        }
-        .toggle-button {
-            background-color: #34495e;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .toggle-button:hover {
-            background-color: #2c3e50;
-        }
-        .category {
-            margin-bottom: 2em;
-        }
-        .category-header {
-            font-size: 1.2em;
-            color: #2c3e50;
-            margin-bottom: 1em;
-            padding-bottom: 0.5em;
-            border-bottom: 2px solid #eee;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        .data-row td {
-            font-size: 13px;
-            padding: 8px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        td.number {
-            width: 4%;
-            text-align: center;
-            font-weight: 500;
-        }
-        td.year {
-            width: 6%;
-            text-align: center;
-            font-weight: 500;
-        }
-        td.author {
-            width: 20%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        td.title {
-            width: 30%;
-            font-weight: 500;
-            word-break: keep-all;
-        }
-        td.journal {
-            width: 20%;
-        }
-        td.volume {
-            width: 8%;
-        }
-        td.pages {
-            width: 8%;
-        }
-        td.doi {
-            width: 12%;
-        }
-        .doi a {
-            color: #2980b9;
-            text-decoration: none;
-            overflow-wrap: break-word;
-        }
-        .doi a:hover {
-            text-decoration: underline;
-        }
-        .citation-copy {
-            padding: 3px 6px;
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .citation-copy:hover {
-            background-color: #e9ecef;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연구 실적</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>DesignIT 연구실 논문 성과</h1>
-    <div class="toolbar">
-        <div class="filter-container">
-            <div class="filter-controls">
-                <button id="toggleAcknowledgement" class="toggle-button" onclick="toggleAcknowledgement()">
-                    사사표기 보기
-                </button>
-                <select id="categoryFilter" onchange="addCategoryFilter()">
-                    <option value="">카테고리 선택</option>
+    <div class="container">
+        <div class="header">
+            <h1>연구 실적</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요...">
+                <select id="yearFilter">
+                    <option value="">전체 연도</option>
+                    {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
                 </select>
-                <select id="yearFilter" onchange="addYearFilter()">
-                    <option value="">연도 선택</option>
-                </select>
+                <button onclick="exportToWord()">Word로 내보내기</button>
             </div>
         </div>
-    </div>
-    {% if categories %}
-        {% for category, entries in categories.items() %}
-            <div class="category">
-                <h3 class="category-header">{{ category }}</h3>
-                <table>
-                    <tbody>
-                        {% for entry in entries %}
-                            <tr class="data-row">
-                                <td class="number">{{ entry.number }}.</td>
-                                <td class="year">{{ entry.year }}</td>
-                                <td class="author">{{ entry.author }}</td>
-                                <td class="title">{{ entry.title }}</td>
-                                {% if category == '국제논문' or category == '국제컨퍼런스' %}
-                                    <td class="journal">{{ entry.journal }}</td>
-                                    <td class="volume">{{ entry.volume }}</td>
-                                    <td class="pages">{{ entry.pages }}</td>
-                                    <td class="doi">
-                                        {% if entry.doi %}
-                                            <a href="https://doi.org/{{ entry.doi }}" target="_blank">{{ entry.doi }}</a>
-                                        {% endif %}
-                                    </td>
-                                {% endif %}
-                                <td>
-                                    <button class="citation-copy" onclick="copyAPA(this.parentElement.parentElement)">복사</button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+
+        {% for category, items in data.items() %}
+        <div class="category">
+            <div class="category-header">{{ category }}</div>
+            <div class="data-header">
+                <span>연도</span>
+                <span>저자</span>
+                <span>제목</span>
+                <span>저널/학회</span>
+                <span>권(호)</span>
+                <span>페이지</span>
+                <span>DOI</span>
+                <span>인용</span>
             </div>
+            {% for item in items %}
+            <div class="data-row">
+                <span class="year">{{ item.year }}</span>
+                <span class="author">{{ item.author }}</span>
+                <span class="title">{{ item.title }}</span>
+                <span class="journal">{{ item.journal }}</span>
+                <span class="volume">{{ item.volume }}</span>
+                <span class="pages">{{ item.pages }}</span>
+                <span class="doi">
+                    {% if item.doi %}
+                    <a href="{{ item.doi }}" target="_blank">{{ item.doi }}</a>
+                    {% endif %}
+                </span>
+                <span>
+                    <button class="citation-copy" onclick="copyAPA(this.closest('.data-row'))">복사</button>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
         {% endfor %}
-    {% else %}
-        <p>데이터를 불러올 수 없습니다.</p>
-    {% endif %}
+    </div>
+
     <script>
-        function toggleAcknowledgement() {
-            const button = document.getElementById('toggleAcknowledgement');
-            document.body.classList.toggle('show-acknowledgement');
-            button.classList.toggle('active');
-            button.textContent = document.body.classList.contains('show-acknowledgement')
-                ? '사사표기 숨기기'
-                : '사사표기 보기';
+        document.getElementById('searchInput').addEventListener('input', filterItems);
+        document.getElementById('yearFilter').addEventListener('change', filterItems);
+
+        function filterItems() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const selectedYear = document.getElementById('yearFilter').value;
+            
+            document.querySelectorAll('.category').forEach(category => {
+                let hasVisibleRows = false;
+                
+                category.querySelectorAll('.data-row').forEach(row => {
+                    const year = row.querySelector('.year').textContent;
+                    const text = row.textContent.toLowerCase();
+                    const yearMatch = !selectedYear || year === selectedYear;
+                    const searchMatch = !searchText || text.includes(searchText);
+                    
+                    if (yearMatch && searchMatch) {
+                        row.style.display = '';
+                        hasVisibleRows = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                category.style.display = hasVisibleRows ? '' : 'none';
+            });
         }
+
         function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
             const title = row.querySelector('.title').textContent.trim();
-            const journal = row.querySelector('.journal')?.textContent.trim() || '';
-            const citation = `${authors} (${year}). ${title}. ${journal}`;
+            const journal = row.querySelector('.journal').textContent.trim();
+            const category = row.closest('.category').querySelector('.category-header').textContent;
+            
+            let citation = `${authors} (${year}). ${title}`;
+            
+            if (category === '수상') {
+                const content = row.querySelector('.volume').textContent.trim();
+                citation += `. ${journal}`;
+                if (content) citation += ` ${content}`;
+            } else if (category === '특허') {
+                citation += `. 출원번호: ${journal} ${year}`;
+            } else if (category === 'SW등록') {
+                citation += `. 등록번호: ${journal} ${year}`;
+            } else {
+                const volume = row.querySelector('.volume')?.textContent.trim();
+                const pages = row.querySelector('.pages')?.textContent.trim();
+                const doi = row.querySelector('.doi')?.textContent.trim();
+                
+                const cleanJournal = journal.replace(/<\/?i>/g, '');
+                citation += `. ${cleanJournal}`;
+                
+                if (volume || pages) {
+                    const parts = [];
+                    if (volume) {
+                        const volParts = volume.split('(');
+                        const cleanVolume = volume.replace(/<\/?i>/g, '');
+                        if (volParts.length > 1) {
+                            parts.push(`${cleanVolume}`);
+                        } else {
+                            parts.push(cleanVolume);
+                        }
+                    }
+                    if (pages) parts.push(pages);
+                    if (parts.length > 0) {
+                        citation += ` ${parts.join(' ')}`;
+                    }
+                }
+                
+                if (doi) {
+                    const cleanDoi = doi.replace(/^https:\/\/doi\.org\//g, '').trim();
+                    if (cleanDoi) citation += `. https://doi.org/${cleanDoi}`;
+                }
+            }
+            
+            citation = citation.replace(/\s+/g, ' ').trim();
+            if (!citation.endsWith('.')) citation += '.';
+            
             navigator.clipboard.writeText(citation).then(() => {
                 const button = row.querySelector('.citation-copy');
                 button.textContent = '복사됨';
-                setTimeout(() => { button.textContent = '복사'; }, 2000);
+                setTimeout(() => button.textContent = '복사', 2000);
+            });
+        }
+
+        function exportToWord() {
+            const exportData = {};
+            const visibleCategories = Array.from(document.querySelectorAll('.category'))
+                .filter(category => window.getComputedStyle(category).display !== 'none');
+            
+            visibleCategories.forEach(category => {
+                const categoryName = category.querySelector('.category-header').textContent;
+                const visibleRows = Array.from(category.querySelectorAll('.data-row'))
+                    .filter(row => window.getComputedStyle(row).display !== 'none');
+                
+                if (visibleRows.length > 0) {
+                    exportData[categoryName] = visibleRows.map(row => ({
+                        year: row.querySelector('.year').textContent.trim(),
+                        author: row.querySelector('.author').textContent.trim(),
+                        title: row.querySelector('.title').textContent.trim(),
+                        journal: row.querySelector('.journal').textContent.trim(),
+                        volume: row.querySelector('.volume')?.textContent.trim() || '',
+                        pages: row.querySelector('.pages')?.textContent.trim() || '',
+                        doi: row.querySelector('.doi a')?.textContent.trim() || ''
+                    }));
+                }
+            });
+
+            fetch('/export', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(exportData)
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '연구실적.docx';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('파일 생성 중 오류가 발생했습니다.');
             });
         }
     </script>
