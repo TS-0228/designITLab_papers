@@ -135,33 +135,14 @@
             padding-right: 0.5em !important;
         }
 
-        td.number::after {
-            content: ".";
-            position: relative;
-            right: auto;
-            margin-left: 0;
-        }
-
-        .data-row td:not(.number):not(:last-child) {
-            position: relative;
-            padding-right: 1.5em;
-        }
-
-        .data-row td:not(.number):not(:last-child)::after {
-            content: ",";
-            position: absolute;
-            right: 0.5em;
-        }
-
-        .data-row td:has(button)::after,
-        .data-row td:last-child::after {
-            content: none;
-        }
-
-        .data-row td {
+        /* 항목 뒤에 쉼표(,)가 붙지 않도록 수정된 부분 */
+        .data-row td:not(.number) {
             padding: 8px 4px;
             vertical-align: top;
         }
+
+        /* 기존에는 td:not(.number):not(:last-child)::after { content: ","; } 로 쉼표를 넣었으나 제거 */
+        /* 마지막에 :has(button)이나 :last-child 에서 comma를 제거하는 코드도 삭제함 */
 
         .data-row td:last-child {
             padding-right: 0.5em;
@@ -436,7 +417,7 @@
             });
         }
 
-function copyAPA(row) {
+        function copyAPA(row) {
             const authors = row.querySelector('.author').textContent.trim();
             const year = row.querySelector('.year').textContent.trim();
             const title = row.querySelector('.title').textContent.trim();
@@ -500,5 +481,3 @@ function copyAPA(row) {
     </script>
 </body>
 </html>
-
-        
