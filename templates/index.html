@@ -258,7 +258,7 @@
                         journal: row.querySelector('.journal').textContent.trim(),
                         volume: row.querySelector('.volume')?.textContent.trim() || '',
                         pages: row.querySelector('.pages')?.textContent.trim() || '',
-                        doi: row.querySelector('.doi a')?.textContent.trim() || '',
+                        doi: row.querySelector('.doi a')?.textContent.trim() || ''  // 마지막 쉼표 제거
                     }));
                 }
             });
@@ -294,11 +294,11 @@
             if (category === '수상') {
                 const content = row.querySelector('.volume').textContent.trim();
                 citation += `. ${journal}`;
-                if (content) citation += ` ${content}`;
+                if (content) citation += `, ${content}`;
             } else if (category === '특허') {
-                citation += `. 출원번호: ${journal} ${year}`;
+                citation += `. 출원번호: ${journal}, ${year}`;
             } else if (category === 'SW등록') {
-                citation += `. 등록번호: ${journal} ${year}`;
+                citation += `. 등록번호: ${journal}, ${year}`;
             } else {
                 const volume = row.querySelector('.volume')?.textContent.trim();
                 const pages = row.querySelector('.pages')?.textContent.trim();
@@ -320,7 +320,7 @@
                     }
                     if (pages) parts.push(pages);
                     if (parts.length > 0) {
-                        citation += ` ${parts.join(' ')}`;
+                        citation += `, ${parts.join(', ')}`;
                     }
                 }
                 
